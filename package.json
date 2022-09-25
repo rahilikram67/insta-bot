@@ -1,0 +1,27 @@
+{
+  "name": "alert-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": " nodemon --watch \"src/**\" --ext \"ts,json\" --exec npx ts-node --transpile-only --files src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cron": "^2.0.0",
+    "@types/lodash": "^4.14.184",
+    "cron": "^2.1.0",
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2",
+    "lodash": "^4.17.21",
+    "playwright": "^1.26.0",
+    "stormdb": "^0.6.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1",
+    "typescript": "^4.8.3"
+  }
+}
