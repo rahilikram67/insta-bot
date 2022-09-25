@@ -7,5 +7,4 @@ export const defaults: Config & { client?: Client } = {
     lock: false,
     previous: {},
     channelMap: [],
-    time:0
 }
