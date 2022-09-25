@@ -36,9 +36,9 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        config.page = await (await play.firefox.launch()).newPage()
+        config.page = await (await play.chromium.launch()).newPage()
     } catch (error) {
-        return console.log("Browser can't be launched")
+        return console.log(error)
     }
 
 
