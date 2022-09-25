@@ -10,12 +10,14 @@ export async function available(config: Config & { client: Client, page: play.Pa
     const embeds: EmbedBuilder[] = []
     for (const url of config.urls) {
         let post = await grab(config.page, url)
-        if (post && !config.previous[url]) embeds.push(
+        if (post && (!config.previous[url] || config.previous[url].caption != post.caption)) embeds.push(
             new EmbedBuilder()
-                .setColor(0x777777)
-                .setTitle(post.name)
-                .setImage(post.pic)
-                .setDescription(post.caption + "\n" + post.link)
+                .setColor("#777777")
+                .setAuthor({ name: post.name })
+                .setThumbnail(post.profileimg)
+                .setTitle("User Profile")
+                .setImage(post.postpic)
+                .setDescription(`***Caption***:\n${post.caption}\n***[PostLink](${post.postlink})***`)
                 .setURL(url)
                 .setTimestamp(post.time)
         )

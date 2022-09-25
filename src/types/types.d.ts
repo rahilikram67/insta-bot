@@ -3,7 +3,6 @@ interface Config {
     lock: boolean
     previous: ItemObject
     channelMap: string[]
-    time:number
 }
 
 
@@ -14,8 +13,9 @@ interface ItemObject {
 
 interface Post{
     name:string
-    link:string
+    postlink:string
     caption:string
-    pic:string
+    profileimg:string
+    postpic:string
     time:number
 }

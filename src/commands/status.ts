@@ -1,4 +1,4 @@
-import { EmbedBuilder, Message } from "discord.js";
+import { Embed, EmbedBuilder, Message } from "discord.js";
 import { isEmpty, omit } from "lodash";
 import { messageSendError } from "../utils/errors";
 import { reply } from "../utils/func";
@@ -9,13 +9,14 @@ export async function status(message: Message, config: Config) {
     for (const v of Object.entries(config.previous)) {
         const [url, item] = v
         if (!item) continue
-        const { caption, link, name, pic, time } = item
+        const { caption, postlink, name, postpic, time, profileimg } = item
         embeds.push(
             new EmbedBuilder()
-                .setColor(0x777777)
-                .setTitle(name)
-                .setImage(pic)
-                .setDescription(caption+"\n"+link)
+                .setColor("#777777")
+                .setAuthor({ name, iconURL: profileimg })
+                .setTitle("User Profile")
+                .setImage(postpic)
+                .setDescription(`***Caption***:\n${caption}\n***[PostLink](${postlink})***`)
                 .setURL(url)
                 .setTimestamp(time)
         )

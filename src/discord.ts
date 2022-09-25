@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Message } from "discord.js"
+import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, Message } from "discord.js"
 
 import { add } from "./commands/add"
 import { del } from "./commands/del"
@@ -51,7 +51,7 @@ export const discordServer = async () => {
 
 
 
-    config.client.on("ready", () => {
+    config.client.on("ready", (client) => {
         console.log("Bot is ready!")
         new CronJob("*/5 * * * * *", async () => {
             await available(config)

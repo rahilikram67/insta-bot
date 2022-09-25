@@ -5,7 +5,7 @@ export function info(message: Message, config: Config) {
     message.channel.send({
         embeds: [
             new EmbedBuilder()
-                .setColor(0x777777)
+                .setColor("#777777")
                 .setTitle("Available Commands")
                 .setAuthor({ name: "Monitor" })
                 .addFields([
