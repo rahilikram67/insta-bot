@@ -43,7 +43,7 @@ export const discordServer = async () => {
         })
         config.page = await context.newPage()
     } catch (error) {
-        return console.log(error)
+        return console.error(error)
     }
 
 
