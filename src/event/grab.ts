@@ -4,7 +4,7 @@ import fs from "fs"
 export async function grab(page: play.Page, url: string): Promise<Post | undefined> {
     if (!page) return
     await new Promise(resolve => setTimeout(resolve, random(1, 5) * 1000))
-    page.on("request", (r) => redirectHandler(r, page))
+    //page.on("request", (r) => redirectHandler(r, page))
     
     try {
         await page.goto(url)
@@ -19,7 +19,7 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
         const name = await _name[0].textContent()
         const src = await ref[0].getAttribute("src")
         const alt = await ref[0].getAttribute("alt")
-        page.off("request", (r) => redirectHandler(r, page))
+        //page.off("request", (r) => redirectHandler(r, page))
         return {
             caption: alt || "",
             name: name || "",
@@ -30,7 +30,7 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
         }
     } catch (error) {
         console.log(error)
-        page.off("request", (r) => redirectHandler(r, page))
+       // page.off("request", (r) => redirectHandler(r, page))
     }
 }
 
