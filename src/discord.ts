@@ -36,7 +36,7 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        config.page = await (await play.firefox.launch({headless:false})).newPage()
+        config.page = await (await play.firefox.launch()).newPage()
     } catch (error) {
         return console.log(error)
     }
