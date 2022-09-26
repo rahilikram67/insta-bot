@@ -36,7 +36,11 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        config.page = await (await play.firefox.launch()).newPage()
+        const browser = await play.firefox.launch()
+        const context = await browser.newContext({
+            bypassCSP:true
+        })
+        config.page = await context.newPage()
     } catch (error) {
         return console.log(error)
     }
