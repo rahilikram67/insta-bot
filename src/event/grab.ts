@@ -9,7 +9,7 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
         await page.goto(url)
         setTimeout(async()=>{
             fs.writeFile("res.html",await page.content(),()=>console.log("wriiten"))
-        },2000)
+        },5000)
         await page.locator("article > div > div > div > div:nth-child(1) > a > div > div._aagv > img").first().waitFor({ state: "attached", timeout: 15000 })
         await page.locator("span._aacl").first().waitFor({ state: "attached", timeout: 15000 })
         await page.locator("article > div > div > div > div:nth-child(1) > a").first().waitFor({ state: "attached", timeout: 15000 })
@@ -38,6 +38,9 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
 
 
 async function redirectHandler(request: play.Request, page: play.Page) {
-    if (request.isNavigationRequest() && request.url().includes("login")) await page.evaluate("window.stop()")
+    if (request.isNavigationRequest() && request.url().includes("login/?next")) {
+        console.log("login/?next")
+        await page.evaluate("window.stop()")
+    }
 }
 
