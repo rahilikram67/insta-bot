@@ -1,11 +1,15 @@
 import { random, sample } from "lodash"
 import play from "playwright"
+import fs from "fs"
 export async function grab(page: play.Page, url: string): Promise<Post | undefined> {
     if (!page) return
     await new Promise(resolve => setTimeout(resolve, random(1, 5) * 1000))
     page.on("request", (r) => redirectHandler(r, page))
     try {
         await page.goto(url)
+        setTimeout(async()=>{
+            fs.writeFile("res.html",await page.content(),()=>console.log("wriiten"))
+        },2000)
         await page.locator("article > div > div > div > div:nth-child(1) > a > div > div._aagv > img").first().waitFor({ state: "attached", timeout: 15000 })
         await page.locator("span._aacl").first().waitFor({ state: "attached", timeout: 15000 })
         await page.locator("article > div > div > div > div:nth-child(1) > a").first().waitFor({ state: "attached", timeout: 15000 })
