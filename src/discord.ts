@@ -17,7 +17,7 @@ import play from "playwright"
 import { CronJob } from "cron"
 
 export const discordServer = async () => {
-    const config: Config & { client: Client, page: play.Page } = clone(defaults) as any//clone(db.value()?.setting || defaults) as any
+    const config: Config & { client: Client, page: play.Page } = clone(db.value()?.setting || defaults) as any
     if (!db.value()?.setting?.urls) db.set("setting", defaults).save()
     config.client = new Client({
         intents: [
