@@ -38,7 +38,8 @@ export const discordServer = async () => {
     try {
         const browser = await play.firefox.launch()
         const context = await browser.newContext({
-            bypassCSP:true
+            bypassCSP:true,
+            userAgent:"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0"
         })
         config.page = await context.newPage()
     } catch (error) {
