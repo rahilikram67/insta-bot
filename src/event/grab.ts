@@ -5,11 +5,11 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
     if (!page) return
     await new Promise(resolve => setTimeout(resolve, random(1, 5) * 1000))
     page.on("request", (r) => redirectHandler(r, page))
+    page.on("console",(message)=>{
+        console.log(message.text())
+    })
     try {
-        await page.goto(url)
-        setTimeout(async()=>{
-            fs.writeFile("res.html",await page.content(),()=>console.log("wriiten"))
-        },5000)
+        await page.goto(url,{waitUntil:"networkidle"})
         await page.locator("article > div > div > div > div:nth-child(1) > a > div > div._aagv > img").first().waitFor({ state: "attached", timeout: 15000 })
         await page.locator("span._aacl").first().waitFor({ state: "attached", timeout: 15000 })
         await page.locator("article > div > div > div > div:nth-child(1) > a").first().waitFor({ state: "attached", timeout: 15000 })
