@@ -2,7 +2,7 @@ import { random, sample } from "lodash"
 import play from "playwright"
 export async function grab(page: play.Page, url: string): Promise<Post | undefined> {
     if (!page) return
-    await new Promise(resolve => setTimeout(resolve, random(1, 4) * 1000))
+    await new Promise(resolve => setTimeout(resolve, random(1, 5) * 1000))
     page.on("request", (r) => redirectHandler(r, page))
     try {
         await page.goto(url)
