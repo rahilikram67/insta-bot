@@ -37,9 +37,7 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        const browser = await play.firefox.launch({
-            headless: false
-        })
+        const browser = await play.firefox.launch()
         config.page = await browser.newPage()
         config.page.route("**/*", (route) => {
             const request = route.request()
