@@ -1,4 +1,4 @@
-import { Client, DMChannel, EmbedBuilder, GatewayIntentBits, Message } from "discord.js"
+import { Client, GatewayIntentBits, Message } from "discord.js"
 
 import { add } from "./commands/add"
 import { del } from "./commands/del"
@@ -15,9 +15,10 @@ import { db } from "./utils/stormDb"
 import { defaults } from "./utils/defaults"
 import play from "playwright"
 import { CronJob } from "cron"
-
+import UserAgent from "user-agents"
+const userAgent = new UserAgent()
 export const discordServer = async () => {
-    const config: Config & { client: Client, browser: play.Browser } = clone(db.value()?.setting || defaults) as any
+    const config: Config & { client: Client, page: play.Page } = clone(db.value()?.setting || defaults) as any
     if (!db.value()?.setting?.urls) db.set("setting", defaults).save()
     config.client = new Client({
         intents: [
@@ -36,7 +37,20 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        config.browser = await play.firefox.launch()
+        const browser = await play.firefox.launch({
+            headless: false
+        })
+        config.page = await browser.newPage()
+        config.page.route("**/*", (route) => {
+            const request = route.request()
+            const nav = request.isNavigationRequest()
+            const headers = request.headers()
+            delete headers["User-Agent"]
+            if (nav && request.url().includes("login/?next")) route.abort()
+            else if (nav) route.continue({ headers: { ...request.headers(), "User-Agent": userAgent.random().toString() } })
+            else route.continue({ headers: { ...request.headers(), "User-Agent": userAgent.random().toString() } })
+        })
+
     } catch (error) {
         return console.error(error)
     }
@@ -53,8 +67,8 @@ export const discordServer = async () => {
 
     config.client.on("ready", (client) => {
         console.log("Bot is ready!")
-        new CronJob("*/5 * * * * *", async () => {
-            await available(config)
+        new CronJob("*/5 * * * * *", () => {
+            available(config)
             if (!config.lock) db.set("setting.previous", config.previous).save()
         }).start()
     })
