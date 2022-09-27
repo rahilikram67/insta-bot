@@ -17,7 +17,7 @@ import play from "playwright"
 import { CronJob } from "cron"
 
 export const discordServer = async () => {
-    const config: Config & { client: Client, page: play.Page } = clone(db.value()?.setting || defaults) as any
+    const config: Config & { client: Client, browser: play.Browser } = clone(db.value()?.setting || defaults) as any
     if (!db.value()?.setting?.urls) db.set("setting", defaults).save()
     config.client = new Client({
         intents: [
@@ -36,12 +36,7 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        const browser = await play.firefox.launch()
-        const context = await browser.newContext({
-            bypassCSP:true,
-            userAgent:"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:105.0) Gecko/20100101 Firefox/105.0"
-        })
-        config.page = await context.newPage()
+        config.browser = await play.firefox.launch()
     } catch (error) {
         return console.error(error)
     }

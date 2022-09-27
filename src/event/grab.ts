@@ -1,10 +1,12 @@
 import { random } from "lodash"
 import play from "playwright"
-export async function grab(page: play.Page, url: string): Promise<Post | undefined> {
-    if (!page) return
+import UserAgent from "user-agents"
+const userAgent = new UserAgent({ deviceCategory: "desktop" });
+export async function grab(browser: play.Browser, url: string): Promise<Post | undefined> {
+    if (!browser) return
+    const page = await (await browser.newContext({ userAgent: userAgent.random().toString() })).newPage()
     await new Promise(resolve => setTimeout(resolve, random(1, 5) * 1000))
     page.on("request", (r) => redirectHandler(r, page))
-    
     try {
         await page.goto(url)
         await page.locator("article > div > div > div > div:nth-child(1) > a > div > div._aagv > img").first().waitFor({ state: "attached", timeout: 15000 })
