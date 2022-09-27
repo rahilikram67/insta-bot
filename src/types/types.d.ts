@@ -3,6 +3,7 @@ interface Config {
     lock: boolean
     previous: ItemObject
     channelMap: string[]
+    login: boolean
 }
 
 

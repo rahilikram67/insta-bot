@@ -14,7 +14,7 @@ import { info } from "./commands/info"
 import { db } from "./utils/stormDb"
 import { defaults } from "./utils/defaults"
 import { chromium } from 'playwright-extra';
-import play from "playwright"
+
 import stealth from "puppeteer-extra-plugin-stealth"
 import { CronJob } from "cron"
 import { logger } from "./utils/login"
