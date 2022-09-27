@@ -4,9 +4,7 @@ import play from "playwright"
 
 export async function grab(page: play.Page, url: string): Promise<Post | undefined> {
     if (!page) return
-    
     await new Promise(resolve => setTimeout(resolve, random(1, 5) * 1000))
-    
     try {
         await page.goto(url)
         await page.locator("article > div > div > div > div:nth-child(1) > a > div > div._aagv > img").first().waitFor({ state: "attached", timeout: 15000 })

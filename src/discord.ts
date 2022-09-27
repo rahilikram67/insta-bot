@@ -13,12 +13,15 @@ import { reset } from "./commands/reset"
 import { info } from "./commands/info"
 import { db } from "./utils/stormDb"
 import { defaults } from "./utils/defaults"
+import { chromium } from 'playwright-extra';
 import play from "playwright"
+import stealth from "puppeteer-extra-plugin-stealth"
 import { CronJob } from "cron"
-import UserAgent from "user-agents"
-const userAgent = new UserAgent()
+import { logger } from "./utils/login"
+import { RestProps } from "./utils/UserTypes"
+
 export const discordServer = async () => {
-    const config: Config & { client: Client, page: play.Page } = clone(db.value()?.setting || defaults) as any
+    const config: Config & RestProps = clone(db.value()?.setting || defaults) as any
     if (!db.value()?.setting?.urls) db.set("setting", defaults).save()
     config.client = new Client({
         intents: [
@@ -37,18 +40,14 @@ export const discordServer = async () => {
         "info": info
     }
     try {
-        const browser = await play.firefox.launch()
+        chromium.use(stealth())
+        const browser = await chromium.launchPersistentContext("./login")
         config.page = await browser.newPage()
         config.page.route("**/*", (route) => {
             const request = route.request()
-            const nav = request.isNavigationRequest()
-            const headers = request.headers()
-            delete headers["User-Agent"]
-            if (nav && request.url().includes("login/?next")) route.abort()
-            else if (nav) route.continue({ headers: { ...request.headers(), "User-Agent": userAgent.random().toString() } })
-            else route.continue({ headers: { ...request.headers(), "User-Agent": userAgent.random().toString() } })
+            if (request.isNavigationRequest() && request.url().includes("/login")) config.login = false
+            route.continue()
         })
-
     } catch (error) {
         return console.error(error)
     }
@@ -67,6 +66,7 @@ export const discordServer = async () => {
         console.log("Bot is ready!")
         new CronJob("*/5 * * * * *", () => {
             available(config)
+            logger(config)
             if (!config.lock) db.set("setting.previous", config.previous).save()
         }).start()
     })

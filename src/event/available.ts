@@ -1,10 +1,9 @@
-import { Client, DMChannel, EmbedBuilder } from "discord.js";
+import { DMChannel, EmbedBuilder } from "discord.js";
+import { RestProps } from "../utils/UserTypes";
 
-
-import play from "playwright"
 import { grab } from "./grab";
-export async function available(config: Config & { client: Client, page: play.Page }) {
-    if (config.lock || !config.urls.length || !config.channelMap.length) return
+export async function available(config: Config & RestProps) {
+    if (config.lock || !config.urls.length || !config.channelMap.length || !config.login) return
     config.lock = true
     //api call with no concurrency amd message sending concurrency
     const embeds: EmbedBuilder[] = []
