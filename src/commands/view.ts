@@ -1,9 +1,10 @@
 import { EmbedBuilder, Message } from "discord.js"
 import { messageSendError } from "../utils/errors"
 import { reply } from "../utils/func"
+import { RestProps } from "../utils/UserTypes"
 
 
-export async function view(message: Message, config: Config) {
+export async function view(message: Message, config: Config & RestProps) {
     const { urls } = config
 
     let sended = false
@@ -18,6 +19,7 @@ export async function view(message: Message, config: Config) {
                     .setImage("https://www.freeiconspng.com/thumbs/alert-icon/alert-icon-alert-icon-12.jpg")
                     .setTimestamp()
                     .setDescription(`${urls.length ? urls.join("\n\n") : "\u200b"}`)
+                    .addFields({ name: "Instagram Logged In", value: config.login ? "Yes" : "No" })
             ]
         }).catch(err => messageSendError(message))
     }
@@ -40,7 +42,7 @@ export async function view(message: Message, config: Config) {
         }).catch(err => messageSendError(message))
     }
 
-    if(!sended) reply(message,"No entries")
+    if (!sended) reply(message, "No entries")
 
 }
 
