@@ -1,4 +1,3 @@
-import play from "playwright"
 import { RestProps } from "./UserTypes"
 
 export async function logger(config: Config & RestProps) {

@@ -5,11 +5,11 @@ import { grab } from "./grab";
 export async function available(config: Config & RestProps) {
     if (config.lock || !config.urls.length || !config.channelMap.length || !config.login) return
     config.lock = true
-    //api call with no concurrency amd message sending concurrency
+    // start process
     const embeds: EmbedBuilder[] = []
     for (const url of config.urls) {
         let post = await grab(config.page, url)
-        if (post && (!config.previous[url] || config.previous[url].caption != post.caption)) embeds.push(
+        if (post && (!config.previous[url] || config.previous[url].caption.localeCompare(post.caption))) embeds.push(
             new EmbedBuilder()
                 .setColor("#777777")
                 .setAuthor({ name: post.name })
@@ -27,7 +27,6 @@ export async function available(config: Config & RestProps) {
         let channel: DMChannel = config.client.channels.cache.get(v) as any
         if (channel) channel.send({ embeds }).catch(() => { })
     }
-
     config.lock = false
 }
 
