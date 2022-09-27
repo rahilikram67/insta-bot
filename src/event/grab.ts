@@ -28,7 +28,6 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
             profileimg: await profile_img[0].getAttribute("src") || ""
         }
     } catch (error) {
-        console.log(await page.content())
         console.log(error)
         page.off("request", (r) => redirectHandler(r, page))
     }
@@ -37,7 +36,6 @@ export async function grab(page: play.Page, url: string): Promise<Post | undefin
 
 async function redirectHandler(request: play.Request, page: play.Page) {
     if (request.isNavigationRequest() && request.url().includes("login/?next")) {
-        console.log("login/?next")
         await page.evaluate("window.stop()")
     }
 }
