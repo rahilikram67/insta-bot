@@ -4,7 +4,7 @@ import { reply } from "../utils/func"
 import { RestProps } from "../utils/UserTypes"
 
 
-export async function view(message: Message, config: Config & RestProps) {
+export async function view(message: Message, config: Config) {
     const { urls } = config
 
     let sended = false
@@ -19,7 +19,7 @@ export async function view(message: Message, config: Config & RestProps) {
                     .setImage("https://www.freeiconspng.com/thumbs/alert-icon/alert-icon-alert-icon-12.jpg")
                     .setTimestamp()
                     .setDescription(`${urls.length ? urls.join("\n\n") : "\u200b"}`)
-                    .addFields({ name: "Instagram Logged In", value: config.login ? "Yes" : "No" })
+                    .addFields({ name: "Instagram Logged In", value: (config as any).login ? "Yes" : "No" })
             ]
         }).catch(err => messageSendError(message))
     }
