@@ -3,13 +3,17 @@ import { RestProps } from "../utils/UserTypes";
 
 import { grab } from "./grab";
 export async function available(config: Config & RestProps) {
-    if (config.lock || !config.urls.length || !config.channelMap.length || !config.login) return
+    if (config.lock || !config.usernames.length || !config.channelMap.length) {
+        return
+    }
     config.lock = true
     // start process
     const embeds: EmbedBuilder[] = []
-    for (const url of config.urls) {
-        let post = await grab(config.page, url)
-        if (post && (!config.previous[url] || config.previous[url].caption.localeCompare(post.caption))) embeds.push(
+    
+    for (const user of config.usernames) {
+        config.searches.next = user
+        let post = await grab(config)
+        if (post && (!config.previous[user] || config.previous[user].caption.localeCompare(post.caption))) embeds.push(
             new EmbedBuilder()
                 .setColor("#777777")
                 .setAuthor({ name: post.name })
@@ -17,11 +21,11 @@ export async function available(config: Config & RestProps) {
                 .setTitle("User Profile")
                 .setImage(post.postpic)
                 .setDescription(`***Caption***:\n${post.caption}\n***[PostLink](${post.postlink})***`)
-                .setURL(url)
+                .setURL(`https://www.instagram.com/${user}/`)
                 .setTimestamp(post.time)
         )
         if (post) post.time = Date.now()
-        config.previous[url] = post as any
+        config.previous[user] = post as any
     }
     for (const v of config.channelMap) {
         let channel: DMChannel = config.client.channels.cache.get(v) as any

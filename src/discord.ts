@@ -22,7 +22,7 @@ import { RestProps } from "./utils/UserTypes"
 
 export const discordServer = async () => {
     const config: Config & RestProps = clone(db.value()?.setting || defaults) as any
-    if (!db.value()?.setting?.urls) db.set("setting", defaults).save()
+    if (!db.value()?.setting?.usernames) db.set("setting", defaults).save()
     config.client = new Client({
         intents: [
             GatewayIntentBits.Guilds,
@@ -30,6 +30,7 @@ export const discordServer = async () => {
             GatewayIntentBits.MessageContent
         ],
     })
+    config.searches = { pre: "", next: "" }
     const cmds: { [key: string]: (message: Message, config: Config) => void } = {
         "add": add,
         "del": del,
@@ -41,17 +42,19 @@ export const discordServer = async () => {
     }
     try {
         chromium.use(stealth())
-        const browser = await chromium.launchPersistentContext("./login")
+        const browser = await chromium.launch()
         config.page = await browser.newPage()
         config.page.route("**/*", (route) => {
             const request = route.request()
-            if (request.isNavigationRequest() && request.url().includes("/login")) config.login = false
+            if (request.url().includes("/login")) { }
             route.continue()
         })
+
     } catch (error) {
         return console.error(error)
     }
 
+    let login = false
 
     config.client.on("messageCreate", async (message) => {
         if (!message.member?.permissions.has("Administrator")) return
@@ -64,11 +67,14 @@ export const discordServer = async () => {
 
     config.client.on("ready", (client) => {
         console.log("Bot is ready!")
-        new CronJob("*/5 * * * * *", () => {
-            available(config)
-            logger(config)
+        var cron = new CronJob("*/3 * * * * *", async () => {
+            cron.stop()
+            if (login) await available(config)
+            else login = await logger(config) == true
             if (!config.lock) db.set("setting.previous", config.previous).save()
-        }).start()
+            cron.start()
+        })
+        cron.start()
     })
     config.client.login(process.env.TOKEN)
     return config

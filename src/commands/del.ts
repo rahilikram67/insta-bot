@@ -9,9 +9,9 @@ export async function del(message: Message, config: Config) {
     const arr_len = matches.length
     if (arr_len && arr_len > 1) return reply(message, "Commands are incorrect")
     const url = matches[0]
-    remove(config.urls, (u) => u == url)
+    remove(config.usernames, (u) => u == url)
     delete config.previous[url]
-    db.set("setting.urls", config.urls as any).save()
+    db.set("setting.usernames", config.usernames as any).save()
     
-    reply(message, `url ${url} has been removed`)
+    reply(message, `Username ${url} has been removed`)
 }

@@ -1,9 +1,8 @@
 interface Config {
-    urls: string[]
+    usernames: string[]
     lock: boolean
     previous: ItemObject
-    channelMap: string[]
-    login: boolean
+    channelMap: string[]    
 }
 
 

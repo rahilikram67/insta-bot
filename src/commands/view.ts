@@ -5,10 +5,10 @@ import { RestProps } from "../utils/UserTypes"
 
 
 export async function view(message: Message, config: Config) {
-    const { urls } = config
+    const { usernames } = config
 
     let sended = false
-    if (config.urls && config.urls.length) {
+    if (config.usernames && config.usernames.length) {
         sended = true
         message.channel.send({
             embeds: [
@@ -18,7 +18,7 @@ export async function view(message: Message, config: Config) {
                     .setTitle('Insta Bot Config')
                     .setImage("https://www.freeiconspng.com/thumbs/alert-icon/alert-icon-alert-icon-12.jpg")
                     .setTimestamp()
-                    .setDescription(`${urls.length ? urls.join("\n\n") : "\u200b"}`)
+                    .setDescription(`${usernames.length ? usernames.join("\n\n") : "\u200b"}`)
                     .addFields({ name: "Instagram Logged In", value: (config as any).login ? "Yes" : "No" })
             ]
         }).catch(err => messageSendError(message))

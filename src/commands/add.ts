@@ -8,9 +8,9 @@ export async function add(message: Message, config: Config) {
     matches.shift()
     const arr_len = matches.length
     if (arr_len && arr_len > 1) return reply(message, "Commands are incorrect")
-    config.urls = union(config.urls,[matches[0]])
-    db.set("setting.urls", config.urls as any).save()
-    reply(message, `url ${matches[0]} has been added`)
+    config.usernames = union(config.usernames,[matches[0]])
+    db.set("setting.usernames", config.usernames as any).save()
+    reply(message, `Username ${matches[0]} has been added`)
 }
 
 
